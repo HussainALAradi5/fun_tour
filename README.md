@@ -21,6 +21,7 @@
 - Jave Spring
 - JS
 - React
+- React Native
 - TypeScript
 - CSS(Styling)
 - Postgresql
@@ -55,8 +56,6 @@
 
 ### **Future Updates**
 
-- [ ] Responsive
-- [ ] More Hidden Re-balance Over time
 
 ---
 
