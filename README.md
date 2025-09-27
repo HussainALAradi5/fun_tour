@@ -33,12 +33,13 @@
 
 <!-- #### [UML Diagram](./images/studium_booking.png) -->
 
-#### [UML Diagram](./images/dragon_dungon_invaders.drawio.png)
+<!-- #### [UML Diagram](./images/dragon_dungon_invaders.drawio.png) -->
 
 #### Features:
 
 1. Freindly UI
 2. Smooth Experience
+3. effective system
 
 ---
 
