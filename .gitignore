@@ -1,2 +1,2 @@
 .vscode 
-application.properties
+./server/resources/application.properties
