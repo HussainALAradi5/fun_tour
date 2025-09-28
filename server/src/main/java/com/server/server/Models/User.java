@@ -1,5 +1,6 @@
 package com.server.server.Models;
 
+
 import com.server.server.Enums.RoleEnum;
 
 import jakarta.persistence.Entity;
@@ -9,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +27,17 @@ public class User {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long userId;
   private int age;
-  private String userName;
+  @NotEmpty(message="you must fill the user name!")
+  private String userName ;
+  @NotEmpty(message="you must fill the password!")
   private String password;
+  @NotEmpty(message="mobile number should not be empty")
+  private String mobileNumber;
+  @NotEmpty(message="phone number should not be empty")
+  private String phoneNumber;
+  @NotEmpty(message = "Email must not be empty")
+  @Email(message = "Email must be valid")
+  private String email;
   @Enumerated(EnumType.STRING)
     private RoleEnum roleEnum;
 
