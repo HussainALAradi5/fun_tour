@@ -1,12 +1,14 @@
 package com.server.server.Controllers;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,15 +31,36 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-
     @PostMapping("/register")
-public ResponseEntity<String> registerUser(@Valid @RequestBody User user) {
-    try {
-        String message = userService.register(user);
-        return ResponseEntity.ok(message);
-    } catch (IllegalArgumentException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<String> registerUser(@Valid @RequestBody User user) {
+        try {
+            String message = userService.register(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(message);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
-}
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateUser(@Valid @RequestBody User updatedUser) {
+        try {
+            Optional<User> optionalUser = userService.findUserById(updatedUser.getUserId());
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            }
+            User existingUser = optionalUser.get();
+
+            String message = userService.updateUser(
+                    existingUser,
+                    updatedUser.getPassword(),
+                    updatedUser.getEmail(),
+                    updatedUser.getMobileNumber(),
+                    updatedUser.getPhoneNumber());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
+
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
 
 }
