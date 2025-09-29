@@ -8,7 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.server.server.Enums.RoleEnum;
+import com.server.server.Models.Country;
 import com.server.server.Models.User;
+import com.server.server.Repositories.CountryRepository;
 import com.server.server.Repositories.UserRepository;
 
 @Service
@@ -20,21 +22,52 @@ public class UserService {
   @Autowired
   PasswordEncoder passwordEncoder;
 
+  @Autowired
+  private CountryRepository countryRepository;    
+
+  // public String register(User user) { 
+  //       if (userRepository.existsByUserName(user.getUserName())) {
+  //           throw new IllegalArgumentException("Username is already taken!");
+  //       }
+  //       if (user.getRoleEnum() == null) {
+  //           user.setRoleEnum(RoleEnum.USER);
+  //       }
+  //       user.setPassword(passwordEncoder.encode(user.getPassword()));
+  //       if (user.getCountry() == null || user.getCountry().getCountryName() == null) {
+  //           throw new IllegalArgumentException("Country should not be empty");
+  //       }
+  //       Country country = countryRepository
+  //               .findByCountryNameIgnoreCase(user.getCountry().getCountryName().trim());
+  //       if (country == null) {
+  //           throw new IllegalArgumentException("Country not found: " + user.getCountry().getCountryName());
+  //       }
+  //       user.setCountry(country);
+
+  //       userRepository.save(user);
+  //       return "User registered successfully with ID: " + user.getUserId();
+  //   }
+
   public String register(User user) {
-    if (userRepository.existsByUserName(user.getUserName())) {
-      throw new IllegalArgumentException("Username is already taken");
-    }
-    if (userRepository.existsByEmail(user.getEmail())) {
-      throw new IllegalArgumentException("Email is already registered");
+        if (userRepository.existsByUserName(user.getUserName())) {
+            throw new IllegalArgumentException("Username is already taken!");
+        }
+        if (user.getRoleEnum() == null) {
+            user.setRoleEnum(RoleEnum.USER);
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getCountry() == null || user.getCountry().getCountryName() == null) {
+            throw new IllegalArgumentException("Country should not be empty");
+        }
+        Country country = countryRepository
+                .findByCountryNameIgnoreCase(user.getCountry().getCountryName().trim());
+        if (country == null) {
+            throw new IllegalArgumentException("Country not found: " + user.getCountry().getCountryName());
+        }
+        user.setCountry(country);
+        userRepository.save(user);
+        return "User registered successfully with ID: " + user.getUserId();
     }
 
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-    if (user.getRoleEnum() == null) {
-      user.setRoleEnum(RoleEnum.USER);
-    }
-    userRepository.save(user);
-    return "User registered successfully with ID: " + user.getUserId();
-  }
 
   public List<User> findAllUsers() {
     return userRepository.findAll();

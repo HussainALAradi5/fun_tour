@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,7 +42,6 @@ public class User {
   private String email;
   @ManyToOne
   @JoinColumn(name = "country_id")
-  @NotEmpty(message = "Country should no be empty")
   private Country country;
   @Enumerated(EnumType.STRING)
   private RoleEnum roleEnum;
