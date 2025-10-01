@@ -14,7 +14,7 @@ public class LocationService {
     LocationRepository locationRepository;
 
     public String addLocation(Location location) {
-        boolean existingLocation = locationRepository.isLocationNameExist(location.getLocationName());
+        boolean existingLocation = isLocationNameExist(location.getLocationName());
         if (existingLocation) {
             throw new IllegalArgumentException("Location name already exists.");
         }
@@ -27,12 +27,12 @@ public class LocationService {
         return locationRepository.findAll();
     }
 
-    public boolean isLocationNameTaken(String locationName) {
-        return locationRepository.isLocationNameExist(locationName);
+    public boolean isLocationNameExist(String locationName) {
+        return locationRepository.locationExistByName(locationName);
     }
 
-    public boolean isRegionTaken(String region) {
-        return locationRepository.isRegionExist(region);
+    public boolean isRegionExist(String region) {
+        return locationRepository.locationExistByRegion(region);
     }
 
 }

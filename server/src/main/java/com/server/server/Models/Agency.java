@@ -23,6 +23,8 @@ public class Agency {
     private long agencyId;
     @NotEmpty(message = "Agency name should not be empty")
     private String agencyName;
+    @NotEmpty(message = "Agency code should not be empty")
+    private String agencyCode;
     @NotEmpty(message = "phone number must not be empty")
     private String phone;
     @NotEmpty(message = "Email must not be empty")

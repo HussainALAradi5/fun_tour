@@ -6,33 +6,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.server.server.Models.Location;
-import com.server.server.Services.LocationService;
+import com.server.server.Models.Agency;
+import com.server.server.Services.AgencyService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 @RestController
-@RequestMapping("/location")
-public class LocationController {
+@RequestMapping("/agency")
+public class AgencyController {
 
     @Autowired
-    LocationService locationService;
+    AgencyService agencyService;
 
     @GetMapping
-    public ResponseEntity<List<Location>> showAllLocaions() {
-        List<Location> location = locationService.findAllLocaions();
-        return ResponseEntity.ok(location);
+    public ResponseEntity<List<Agency>> showAllAgencies() {
+        List<Agency> agency = agencyService.finaAllAgencies();
+        return ResponseEntity.ok(agency);
     }
 
-    @PostMapping("/addLocation")
-    public ResponseEntity<String> addLocation(@Valid @RequestBody Location location) {
+    @PostMapping("/addAgency")
+    public ResponseEntity<String> addAgency(@Valid @RequestBody Agency agency) {
         try {
-            String message = locationService.addLocation(location);
+            String message = agencyService.addAgency(agency);
             return ResponseEntity.status(HttpStatus.CREATED).body(message);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
