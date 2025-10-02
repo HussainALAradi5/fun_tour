@@ -1,13 +1,12 @@
 package com.server.server.Models;
 
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -18,21 +17,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Agency {
+public class Branch {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long agencyId;
-    @NotEmpty(message = "Agency name should not be empty")
-    private String agencyName;
-    @NotEmpty(message = "Agency code should not be empty")
-    private String agencyCode;
-    @NotEmpty(message = "phone number must not be empty")
+    private long branchId;
+    @NotEmpty(message = "Branch name should not be empty")
+    private String branchName;
+    @NotEmpty(message = "Phone number must not be empty")
     private String phone;
     @NotEmpty(message = "Email must not be empty")
     @Email(message = "Email must be valid")
     private String email;
-    @OneToMany(mappedBy = "agency")
-    private List<User> users;
-    @OneToMany(mappedBy = "agency", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Branch> branches;
+    @ManyToOne
+    @JoinColumn(name = "agencyId", nullable = false)  
+    private Agency agency;
+    @ManyToOne
+    @JoinColumn(name = "locationId", nullable = false)
+    private Location location;
 }

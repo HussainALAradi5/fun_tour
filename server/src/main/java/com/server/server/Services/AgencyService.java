@@ -29,11 +29,28 @@ public class AgencyService {
     }
 
     public boolean isAgencyExist(String agencyName) {
-        return agencyRepository.agencyExistByName(agencyName);
+        return agencyRepository.existsByAgencyName(agencyName);
     }
 
     public boolean isAgencyCodeExist(String agencyCode) {
-        return agencyRepository.agencyExistByCode(agencyCode);
+        return agencyRepository.existsByAgencyCode(agencyCode);
     }
 
+
+      public Agency updateAgency(long id, Agency updatedAgency) {
+        return agencyRepository.findById(id).map(existing -> {
+            existing.setAgencyName(updatedAgency.getAgencyName());
+            existing.setAgencyCode(updatedAgency.getAgencyCode());
+            existing.setPhone(updatedAgency.getPhone());
+            existing.setEmail(updatedAgency.getEmail());
+            return agencyRepository.save(existing);
+        }).orElseThrow(() -> new IllegalArgumentException("Agency not found with id " + id));
+    }
+
+    public void deleteAgency(long id) {
+        if (!agencyRepository.existsById(id)) {
+            throw new IllegalArgumentException("Agency not found with id " + id);
+        }
+        agencyRepository.deleteById(id);
+    }
 }

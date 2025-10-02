@@ -8,6 +8,6 @@ import com.server.server.Models.Agency;
 @Repository
 public interface AgencyRepository extends JpaRepository<Agency, Long> {
 
-    boolean agencyExistByName(String agencyName);
-    boolean agencyExistByCode(String agencyCode);
+    boolean existsByAgencyName(String agencyName);
+    boolean existsByAgencyCode(String agencyCode);
 }
