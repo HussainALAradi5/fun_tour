@@ -9,8 +9,8 @@ import com.server.server.Models.Location;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    boolean locationExistByRegion(String region);
+    boolean existsByRegion(String region);
 
 
-    boolean locationExistByName(String locationName);
+    boolean existsByLocationName(String locationName);
 }

@@ -28,11 +28,11 @@ public class LocationService {
     }
 
     public boolean isLocationNameExist(String locationName) {
-        return locationRepository.locationExistByName(locationName);
+        return locationRepository.existsByLocationName(locationName);
     }
 
     public boolean isRegionExist(String region) {
-        return locationRepository.locationExistByRegion(region);
+        return locationRepository.existsByRegion(region);
     }
 
 }

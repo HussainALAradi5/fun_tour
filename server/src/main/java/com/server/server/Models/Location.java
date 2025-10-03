@@ -20,8 +20,8 @@ public class Location {
     private long locationId;
     @ManyToOne
     @JoinColumn(name = "country_id")
-    private String locationName;
     private Country country;
+    private String locationName;
     private String region;
     private String address;
     private String description;
