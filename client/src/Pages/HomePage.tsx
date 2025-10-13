@@ -11,8 +11,8 @@ const HomePage = () => {
       <Header />
       <div className="home-page-cards-contaier">
         <Card
-          cardTitle="Card Title"
-          cardDetails="This is a test card."
+          cardTitle="Tour"
+          cardDetails="this tour will take you to bahrain and gulf, have a nice and safe travel."
           cardHandler={cardHandler}
         />
       </div>
