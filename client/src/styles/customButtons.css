@@ -1,0 +1,18 @@
+.primary-button {
+  border: 0.5rem solid indigo;
+  border-radius: 0.6rem;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0.1rem;
+  justify-content: center;
+  align-items: center;
+  background-color: indigo;
+  color: ghostwhite;
+}
+.primary-button:hover {
+  transition: 2s;
+  border-color: cornflowerblue;
+  background-color: cornflowerblue;
+  cursor: pointer;
+  border-radius: 2rem;
+}
