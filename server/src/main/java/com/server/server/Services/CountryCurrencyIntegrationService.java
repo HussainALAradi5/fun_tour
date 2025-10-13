@@ -31,43 +31,54 @@ public class CountryCurrencyIntegrationService {
         this.currencyRepo = currencyRepo;
     }
 
-    public void importCountriesAndCurrencies() throws Exception {
+    public String importCountriesAndCurrencies() throws Exception {
         String countriesJson = apiService.fetchCountriesJson();
         List<CountryDTO> countryDTOs = objectMapper.readValue(
                 countriesJson, new TypeReference<List<CountryDTO>>() {
                 });
+
+        int countryCount = 0;
+        int currencyCount = 0;
+
         for (CountryDTO dto : countryDTOs) {
+            if (dto.getCca2() == null) continue;
+
+            // --- Currency Handling ---
             Currency currencyEntity = null;
             if (dto.getCurrencies() != null && !dto.getCurrencies().isEmpty()) {
                 Map.Entry<String, CurrencyDTO> entry = dto.getCurrencies().entrySet().iterator().next();
                 String currencyCode = entry.getKey();
                 CurrencyDTO cDto = entry.getValue();
 
-                if (!currencyRepo.existsByCurrencyCode(currencyCode)) {
+                currencyEntity = currencyRepo.findByCurrencyCode(currencyCode);
+                if (currencyEntity == null) {
                     currencyEntity = new Currency();
                     currencyEntity.setCurrencyCode(currencyCode);
                     currencyEntity.setCurrencyName(cDto.getName());
                     currencyEntity.setCurrencySymbol(cDto.getSymbol());
-                    currencyEntity = currencyRepo.save(currencyEntity);
-                } else {
-                    currencyEntity = currencyRepo.findByCurrencyCode(currencyCode);
+                    currencyRepo.save(currencyEntity);
+                    currencyCount++;
                 }
             }
 
-            if (dto.getCca2() != null && !countryRepo.existsByIsoCode(dto.getCca2())) {
+            if (!countryRepo.existsByIsoCode(dto.getCca2())) {
                 Country country = new Country();
                 country.setIsoCode(dto.getCca2());
-                if (dto.getName() != null && dto.getName().get("official") != null) {
-                    country.setCountryName(dto.getName().get("official").toString());
-                }
+                country.setCountryName(dto.getName() != null && dto.getName().get("official") != null
+                        ? dto.getName().get("official").toString()
+                        : null);
                 country.setCurrency(currencyEntity);
                 country.setCountryCode(dto.getCca3());
                 country.setLangeuge(dto.getLanguages() != null
                         ? String.join(",", dto.getLanguages().values())
                         : null);
                 country.setFlag(dto.getFlags() != null ? dto.getFlags().getPng() : null);
+
                 countryRepo.save(country);
+                countryCount++;
             }
         }
+
+        return String.format("Imported %d new countries and %d new currencies.", countryCount, currencyCount);
     }
 }

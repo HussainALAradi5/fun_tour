@@ -23,7 +23,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/integration/import").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/integration/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/integration/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .build();
