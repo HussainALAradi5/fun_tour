@@ -1,2 +1,7 @@
-home-page-container {
+.home-page-cards-contaier {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; 
+  padding: 1rem;
+  justify-content: center;
 }

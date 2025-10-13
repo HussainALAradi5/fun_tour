@@ -9,11 +9,13 @@ const HomePage = () => {
   return (
     <div className="home-page-container">
       <Header />
-      <Card
-        cardTitle="Card Title"
-        cardDetails="This is a test card."
-        cardHandler={cardHandler}
-      />
+      <div className="home-page-cards-contaier">
+        <Card
+          cardTitle="Card Title"
+          cardDetails="This is a test card."
+          cardHandler={cardHandler}
+        />
+      </div>
     </div>
   )
 }
