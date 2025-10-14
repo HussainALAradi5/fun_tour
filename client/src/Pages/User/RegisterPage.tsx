@@ -6,69 +6,84 @@ import PrimaryForm from "../../Components/PrimaryForm"
 import type { FormFieldConfig } from "../../Components/PrimaryForm"
 
 const RegisterPage = () => {
-  const navigate = useNavigate()
+  const navigateToLogin = useNavigate()
   const [groupedCountryOptions, setGroupedCountryOptions] = useState<
     {
       label: string
-      options: { label: string; value: string; flag?: string }[]
+      options: {
+        label: string
+        value: string
+        flag?: string
+      }[]
     }[]
   >([])
 
   useEffect(() => {
-    const loadCountryOptions = async () => {
+    const fetchAndGroupCountries = async () => {
       try {
-        const countries = await CountryApiService.getAllCountries()
-        if (!Array.isArray(countries)) {
-          console.error("Expected array but got:", countries)
+        const countryResponse = await CountryApiService.getAllCountries()
+        if (!Array.isArray(countryResponse)) {
+          console.error("Expected array but received:", countryResponse)
           return
         }
 
-        const formatted = countries.map((country: any) => ({
-          label: country.countryName,
-          value: country.countryName,
-          flag: convertIsoToEmoji(country.isoCode),
-        }))
+        const formattedCountryOptions = countryResponse.map(
+          (countryObject: any) => ({
+            label: countryObject.countryName,
+            value: countryObject.countryName,
+            flag: convertIsoCodeToFlagEmoji(countryObject.isoCode),
+          })
+        )
 
-        const grouped = groupAndSortByAlphabet(formatted)
-        setGroupedCountryOptions(grouped)
+        const alphabeticallyGroupedCountries = groupCountriesByFirstLetter(
+          formattedCountryOptions
+        )
+        setGroupedCountryOptions(alphabeticallyGroupedCountries)
       } catch (error) {
-        console.error("Failed to load countries:", error)
+        console.error("Error fetching countries:", error)
       }
     }
 
-    loadCountryOptions()
+    fetchAndGroupCountries()
   }, [])
 
-  const convertIsoToEmoji = (isoCode: string): string =>
+  const convertIsoCodeToFlagEmoji = (isoCode: string): string =>
     isoCode
       .toUpperCase()
-      .replace(/./g, (char) =>
-        String.fromCodePoint(127397 + char.charCodeAt(0))
+      .replace(/./g, (character) =>
+        String.fromCodePoint(127397 + character.charCodeAt(0))
       )
 
-  const groupAndSortByAlphabet = (
-    countries: { label: string; value: string; flag?: string }[]
+  const groupCountriesByFirstLetter = (
+    countryList: {
+      label: string
+      value: string
+      flag?: string
+    }[]
   ) => {
-    const grouped: Record<
-      string,
-      { label: string; value: string; flag?: string }[]
-    > = {}
+    const groupedCountries: Record<string, typeof countryList> = {}
 
-    countries.forEach((country) => {
+    for (const country of countryList) {
       const firstLetter = country.label[0].toUpperCase()
-      if (!grouped[firstLetter]) grouped[firstLetter] = []
-      grouped[firstLetter].push(country)
-    })
+      if (!groupedCountries[firstLetter]) {
+        groupedCountries[firstLetter] = []
+      }
+      groupedCountries[firstLetter].push(country)
+    }
 
-    return Object.keys(grouped)
+    const sortedGroups = Object.keys(groupedCountries)
       .sort()
       .map((letter) => ({
         label: letter,
-        options: grouped[letter].sort((a, b) => a.label.localeCompare(b.label)),
+        options: groupedCountries[letter].sort((countryA, countryB) =>
+          countryA.label.localeCompare(countryB.label)
+        ),
       }))
+
+    return sortedGroups
   }
 
-  const formFields: FormFieldConfig[] = [
+  const registrationFormFields: FormFieldConfig[] = [
     { name: "userName", label: "Username", type: "text" },
     { name: "password", label: "Password", type: "text" },
     { name: "mobileNumber", label: "Mobile Number", type: "text" },
@@ -82,7 +97,9 @@ const RegisterPage = () => {
     },
   ]
 
-  const handleFormSubmit = async (formData: Record<string, any>) => {
+  const handleRegistrationFormSubmit = async (
+    formData: Record<string, any>
+  ) => {
     const registrationPayload = {
       ...formData,
       country: { countryName: formData.country },
@@ -91,9 +108,9 @@ const RegisterPage = () => {
 
     try {
       await AuthService.register(registrationPayload)
-      navigate("/login")
+      navigateToLogin("/login")
     } catch (error) {
-      console.error("Register error:", error)
+      console.error("Registration failed:", error)
     }
   }
 
@@ -101,8 +118,8 @@ const RegisterPage = () => {
     <div className="auth-page">
       <h2>Register</h2>
       <PrimaryForm
-        formFields={formFields}
-        onSubmit={handleFormSubmit}
+        formFields={registrationFormFields}
+        onSubmit={handleRegistrationFormSubmit}
         submitLabel="Register"
       />
     </div>
