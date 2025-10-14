@@ -1,5 +1,5 @@
 import "../styles/header.css"
-import PrimaryButton from "./PrimaryButton"
+import HeaderButton from "./HeaderButton"
 
 const Header = () => {
   const homePageHandler = () => {
@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <div className="header">
-      <PrimaryButton buttonTitle="home" buttonHandler={homePageHandler} />
+      <HeaderButton buttonTitle="home" buttonHandler={homePageHandler} />
     </div>
   )
 }
