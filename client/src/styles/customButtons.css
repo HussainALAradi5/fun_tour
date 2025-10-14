@@ -1,18 +1,37 @@
 .primary-button {
-  border: 0.5rem solid indigo;
-  border-radius: 0.6rem;
+  position: relative;
+  overflow: hidden;
+  
   font-size: 1rem;
   font-weight: bold;
   margin: 0.1rem;
+  padding: 0.5rem 1rem;
+  display: flex;
   justify-content: center;
   align-items: center;
   background-color: indigo;
   color: ghostwhite;
-}
-.primary-button:hover {
-  transition: 2s;
-  border-color: cornflowerblue;
-  background-color: cornflowerblue;
   cursor: pointer;
-  border-radius: 2rem;
+  z-index: 0;
+}
+
+.primary-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background-color: cornflowerblue;
+  z-index: -1;
+  transition: height 1.5s ease;
+}
+
+.primary-button:hover::before {
+  height: 100%;
+}
+
+.primary-button:hover {
+  color: white;
+  transition: color 0.3s ease, border-radius 0.3s ease;
 }
