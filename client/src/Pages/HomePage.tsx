@@ -1,5 +1,6 @@
 import Card from "../Components/Card"
 import Header from "../Components/Header"
+
 import "../styles/home.css"
 const HomePage = () => {
   const cardHandler = () => {
