@@ -1,2 +1,3 @@
 .vscode 
 ./server/resources/application.properties
+.env

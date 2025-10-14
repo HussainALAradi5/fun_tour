@@ -1,6 +1,6 @@
 .header {
   display: flex;
-  justify-content: space-between;
   padding: 0.5rem;
   background-color: olivedrab;
+  gap: 1rem;
 }
