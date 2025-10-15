@@ -2,6 +2,8 @@ package com.server.server.Models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,18 +20,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Country {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long countryId;
+
     private String isoCode;
+
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
+
     private String countryName;
     private String countryCode;
     private String langeuge;
     private String flag;
-    @OneToMany(mappedBy = "country")
-    private List<User> users;
 
+    @OneToMany(mappedBy = "country")
+    @JsonManagedReference
+    private List<User> users;
 }

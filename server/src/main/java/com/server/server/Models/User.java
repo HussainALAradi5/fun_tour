@@ -1,5 +1,6 @@
 package com.server.server.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.server.server.Enums.RoleEnum;
 
 import jakarta.persistence.Entity;
@@ -24,28 +25,37 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private long userId;
-  private int age;
-  @NotEmpty(message = "you must fill the user name!")
-  private String userName;
-  @NotEmpty(message = "you must fill the password!")
-  private String password;
-  @NotEmpty(message = "mobile number should not be empty")
-  private String mobileNumber;
-  @NotEmpty(message = "phone number should not be empty")
-  private String phoneNumber;
-  @NotEmpty(message = "Email must not be empty")
-  @Email(message = "Email must be valid")
-  private String email;
-  @ManyToOne
-  @JoinColumn(name = "country_id")
-  private Country country;
-  @Enumerated(EnumType.STRING)
-  private RoleEnum roleEnum;
-  @ManyToOne
-  @JoinColumn(name = "agency_id")
-  private Agency agency;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long userId;
 
+    private int age;
+
+    @NotEmpty(message = "you must fill the user name!")
+    private String userName;
+
+    @NotEmpty(message = "you must fill the password!")
+    private String password;
+
+    @NotEmpty(message = "mobile number should not be empty")
+    private String mobileNumber;
+
+    @NotEmpty(message = "phone number should not be empty")
+    private String phoneNumber;
+
+    @NotEmpty(message = "Email must not be empty")
+    @Email(message = "Email must be valid")
+    private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    @JsonBackReference
+    private Country country;
+
+    @Enumerated(EnumType.STRING)
+    private RoleEnum roleEnum;
+
+    @ManyToOne
+    @JoinColumn(name = "agency_id")
+    private Agency agency;
 }
