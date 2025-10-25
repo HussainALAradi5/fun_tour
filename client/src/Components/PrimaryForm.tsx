@@ -48,7 +48,7 @@ const customSelectStyles = {
   menu: (baseStyles: any) => ({
     ...baseStyles,
     borderRadius: "0.4rem",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
     zIndex: 10,
   }),
   singleValue: (baseStyles: any) => ({
@@ -70,11 +70,21 @@ const PrimaryForm = ({
   submitLabel = "Submit",
 }: PrimaryFormProps) => {
   const [formData, setFormData] = useState<Record<string, any>>(initialValues)
+  const [showPasswordFields, setShowPasswordFields] = useState<
+    Record<string, boolean>
+  >({})
 
   const updateFormFieldValue = (fieldName: string, newValue: any) => {
     setFormData((previousFormData) => ({
       ...previousFormData,
       [fieldName]: newValue,
+    }))
+  }
+
+  const togglePasswordVisibility = (fieldName: string) => {
+    setShowPasswordFields((prev) => ({
+      ...prev,
+      [fieldName]: !prev[fieldName],
     }))
   }
 
@@ -132,6 +142,23 @@ const PrimaryForm = ({
 
           {formField.type === "select" && Array.isArray(formField.options) ? (
             renderGroupedSelectField(formField.name, formField.options)
+          ) : formField.name.toLowerCase().includes("password") ? (
+            <div className="password-wrapper">
+              <input
+                type={showPasswordFields[formField.name] ? "text" : "password"}
+                value={formData[formField.name] || ""}
+                onChange={(event) =>
+                  updateFormFieldValue(formField.name, event.target.value)
+                }
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => togglePasswordVisibility(formField.name)}
+              >
+                {showPasswordFields[formField.name] ? "Hide" : "Show"}
+              </button>
+            </div>
           ) : (
             <input
               type={formField.type}
