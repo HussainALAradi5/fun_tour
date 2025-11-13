@@ -15,11 +15,14 @@ const LoginPage = () => {
   ]
 
   const handleLogin = async (formData: Record<string, any>) => {
-    const { identifier, password } = formData
+    const credentials: { identifier: string; password: string } = {
+      identifier: formData.identifier,
+      password: formData.password,
+    }
 
     try {
-      const user = await AuthService.login({ identifier, password })
-      localStorage.setItem("user", JSON.stringify(user))
+      await AuthService.login(credentials)
+
       setErrorMessage(null)
       navigate("/profile")
     } catch (err: any) {

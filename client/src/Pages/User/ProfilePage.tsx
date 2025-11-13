@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import UserApiCallerService from "../../utilities/Services/UserApiCallerService"
+import AuthService from "../../utilities/Services/AuthServices"
 import UserError from "./UserError"
 
 const ProfilePage = () => {
@@ -7,16 +8,20 @@ const ProfilePage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user")
-    if (!storedUser) {
+    const parsedUser = AuthService.getCurrentUser()
+
+    if (!parsedUser || !parsedUser.userId) {
       setErrorMessage("No user found. Please login.")
       return
     }
 
-    const parsedUser = JSON.parse(storedUser)
     UserApiCallerService.getUserById(parsedUser.userId)
-      .then((res) => setUser(res.data))
-      .catch(() => setErrorMessage("Failed to load user profile."))
+      .then((res) => {
+        setUser(res)
+      })
+      .catch((err) => {
+        setErrorMessage("Failed to load user profile.")
+      })
   }, [])
 
   if (errorMessage) {
@@ -55,7 +60,7 @@ const ProfilePage = () => {
             <strong>Phone:</strong> {user.phoneNumber}
           </p>
           <p>
-            <strong>Country:</strong> {user.country?.countryName}
+            <strong>Country:</strong> {user.country?.countryName || "N/A"}
           </p>
           <p>
             <strong>Role:</strong> {user.roleEnum}

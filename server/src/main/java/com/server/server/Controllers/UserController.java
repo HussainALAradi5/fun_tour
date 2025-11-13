@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.server.server.Models.User;
+import com.server.server.Security.JwtUtil;
 import com.server.server.Services.UserService;
 
 import jakarta.validation.Valid;
@@ -28,6 +30,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     UserController(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -49,7 +53,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
+@PostMapping("/login")
 public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
     String identifier = credentials.get("identifier");
     String password = credentials.get("password");
@@ -67,7 +71,22 @@ public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
     }
 
-    return ResponseEntity.ok(user); 
+    String token = jwtUtil.generateToken(user.getUserName());
+
+    return ResponseEntity.ok(Map.of(
+        "token", token,
+        "user", user
+    ));
+}
+
+
+    @GetMapping("/{id}")
+public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    Optional<User> userOpt = userService.findUserById(id);
+    if (userOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+    return ResponseEntity.ok(userOpt.get());
 }
 
     @PutMapping("/update")

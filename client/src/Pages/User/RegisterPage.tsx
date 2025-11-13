@@ -7,7 +7,7 @@ import type { FormFieldConfig } from "../../Components/PrimaryForm"
 import UserError from "./UserError"
 
 const RegisterPage = () => {
-  const navigateToLogin = useNavigate()
+  const navigate = useNavigate()
   const [groupedCountryOptions, setGroupedCountryOptions] = useState<
     {
       label: string
@@ -20,19 +20,15 @@ const RegisterPage = () => {
     const fetchAndGroupCountries = async () => {
       try {
         const countryResponse = await CountryApiService.getAllCountries()
-        if (!Array.isArray(countryResponse)) {
-          console.error("Expected array but received:", countryResponse)
-          return
-        }
+        if (!Array.isArray(countryResponse)) return
 
-        const formattedCountryOptions = countryResponse.map((country: any) => ({
+        const formatted = countryResponse.map((country: any) => ({
           label: country.countryName,
           value: country.countryName,
           flag: convertIsoCodeToFlagEmoji(country.isoCode),
         }))
 
-        const grouped = groupCountriesByFirstLetter(formattedCountryOptions)
-        setGroupedCountryOptions(grouped)
+        setGroupedCountryOptions(groupCountriesByFirstLetter(formatted))
       } catch (error) {
         console.error("Error fetching countries:", error)
       }
@@ -52,7 +48,6 @@ const RegisterPage = () => {
     countries: { label: string; value: string; flag?: string }[]
   ) => {
     const grouped: Record<string, typeof countries> = {}
-
     for (const country of countries) {
       const letter = country.label[0].toUpperCase()
       if (!grouped[letter]) grouped[letter] = []
@@ -93,7 +88,7 @@ const RegisterPage = () => {
     try {
       await AuthService.register(payload)
       setErrorMessage(null)
-      navigateToLogin("/login")
+      navigate("/profile")
     } catch (error: any) {
       const message =
         error?.response?.data?.message ||

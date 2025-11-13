@@ -11,7 +11,7 @@ const Header = () => {
   const loginHandler = () => navigate("/login")
   const registerHandler = () => navigate("/register")
   const logoutHandler = () => {
-    localStorage.removeItem("user")
+    AuthService.logout()
     navigate("/")
   }
 
