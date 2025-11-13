@@ -63,7 +63,11 @@ const ProfilePage = () => {
             <strong>Country:</strong> {user.country?.countryName || "N/A"}
           </p>
           <p>
-            <strong>Role:</strong> {user.roleEnum}
+            {user.roleEnum !== "USER" && (
+              <>
+                <strong>Role:</strong> {user.roleEnum}
+              </>
+            )}
           </p>
         </div>
       </div>
