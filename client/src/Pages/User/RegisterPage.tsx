@@ -15,6 +15,7 @@ const RegisterPage = () => {
     }[]
   >([])
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [selectedCountry, setSelectedCountry] = useState<string>("")
 
   useEffect(() => {
     const fetchAndGroupCountries = async () => {
@@ -68,12 +69,6 @@ const RegisterPage = () => {
     { name: "mobileNumber", label: "Mobile Number", type: "text" },
     { name: "phoneNumber", label: "Phone Number", type: "text" },
     { name: "email", label: "Email", type: "text" },
-    {
-      name: "country",
-      label: "Country",
-      type: "select",
-      options: groupedCountryOptions,
-    },
   ]
 
   const handleRegistrationFormSubmit = async (
@@ -81,7 +76,7 @@ const RegisterPage = () => {
   ) => {
     const payload = {
       ...formData,
-      country: { countryName: formData.country },
+      country: { countryName: selectedCountry },
       roleEnum: "USER",
     }
 
@@ -100,7 +95,7 @@ const RegisterPage = () => {
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-xl bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+      <div className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
           Register
         </h2>
@@ -117,6 +112,37 @@ const RegisterPage = () => {
           onSubmit={handleRegistrationFormSubmit}
           submitLabel="Register"
         />
+
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Country
+          </label>
+          <div className="max-h-64 overflow-y-auto border rounded-md bg-white dark:bg-gray-700 p-2">
+            {groupedCountryOptions.map((group) => (
+              <div key={group.label} className="mb-4">
+                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
+                  {group.label}
+                </div>
+                <ul className="space-y-1">
+                  {group.options.map((country) => (
+                    <li
+                      key={country.value}
+                      className={`cursor-pointer px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 ${
+                        selectedCountry === country.value
+                          ? "bg-blue-100 dark:bg-blue-600 text-blue-800 dark:text-white"
+                          : "text-gray-700 dark:text-gray-200"
+                      }`}
+                      onClick={() => setSelectedCountry(country.value)}
+                    >
+                      <span className="mr-2">{country.flag}</span>
+                      {country.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   )
