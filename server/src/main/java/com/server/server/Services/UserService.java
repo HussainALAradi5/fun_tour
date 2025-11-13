@@ -25,28 +25,6 @@ public class UserService {
   @Autowired
   private CountryRepository countryRepository;    
 
-  // public String register(User user) { 
-  //       if (userRepository.existsByUserName(user.getUserName())) {
-  //           throw new IllegalArgumentException("Username is already taken!");
-  //       }
-  //       if (user.getRoleEnum() == null) {
-  //           user.setRoleEnum(RoleEnum.USER);
-  //       }
-  //       user.setPassword(passwordEncoder.encode(user.getPassword()));
-  //       if (user.getCountry() == null || user.getCountry().getCountryName() == null) {
-  //           throw new IllegalArgumentException("Country should not be empty");
-  //       }
-  //       Country country = countryRepository
-  //               .findByCountryNameIgnoreCase(user.getCountry().getCountryName().trim());
-  //       if (country == null) {
-  //           throw new IllegalArgumentException("Country not found: " + user.getCountry().getCountryName());
-  //       }
-  //       user.setCountry(country);
-
-  //       userRepository.save(user);
-  //       return "User registered successfully with ID: " + user.getUserId();
-  //   }
-
   public String register(User user) {
         if (userRepository.existsByUserName(user.getUserName())) {
             throw new IllegalArgumentException("Username is already taken!");
