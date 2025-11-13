@@ -55,6 +55,15 @@ public class UserService {
     return userRepository.findById(userId);
   }
 
+  public Optional<User> findUserByUserName(String userName) {
+    return userRepository.findByUserName(userName);
+}
+
+public Optional<User> findUserByEmail(String email) {
+    return userRepository.findByEmail(email);
+}
+
+
   public String updateUser(User user, String password, String email, String mobileNumber, String phoneNumber) {
     boolean updated = false;
     if (password != null && !password.trim().isEmpty()) {

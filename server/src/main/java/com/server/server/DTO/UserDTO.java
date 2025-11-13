@@ -1,0 +1,15 @@
+package com.server.server.DTO;
+
+import lombok.Data;
+
+
+@Data
+public class UserDTO {
+    private Long userId;
+    private String userName;
+    private String email;
+    private String mobileNumber;
+    private String phoneNumber;
+    private String roleEnum;
+    private String countryName;
+}

@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
                         .requestMatchers(HttpMethod.GET, "/", "/countries/**", "/integration/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users/register", "/integration/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/**", "/integration/**").permitAll()
                         
                         .anyRequest().authenticated()
                 )
