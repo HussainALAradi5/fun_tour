@@ -1,5 +1,3 @@
-import "../../styles/profilePage.css"
-
 const ProfilePage = () => {
   return (
     <div className="profile-page-container">

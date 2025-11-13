@@ -10,11 +10,7 @@ const RegisterPage = () => {
   const [groupedCountryOptions, setGroupedCountryOptions] = useState<
     {
       label: string
-      options: {
-        label: string
-        value: string
-        flag?: string
-      }[]
+      options: { label: string; value: string; flag?: string }[]
     }[]
   >([])
 
@@ -27,18 +23,14 @@ const RegisterPage = () => {
           return
         }
 
-        const formattedCountryOptions = countryResponse.map(
-          (countryObject: any) => ({
-            label: countryObject.countryName,
-            value: countryObject.countryName,
-            flag: convertIsoCodeToFlagEmoji(countryObject.isoCode),
-          })
-        )
+        const formattedCountryOptions = countryResponse.map((country: any) => ({
+          label: country.countryName,
+          value: country.countryName,
+          flag: convertIsoCodeToFlagEmoji(country.isoCode),
+        }))
 
-        const alphabeticallyGroupedCountries = groupCountriesByFirstLetter(
-          formattedCountryOptions
-        )
-        setGroupedCountryOptions(alphabeticallyGroupedCountries)
+        const grouped = groupCountriesByFirstLetter(formattedCountryOptions)
+        setGroupedCountryOptions(grouped)
       } catch (error) {
         console.error("Error fetching countries:", error)
       }
@@ -50,37 +42,27 @@ const RegisterPage = () => {
   const convertIsoCodeToFlagEmoji = (isoCode: string): string =>
     isoCode
       .toUpperCase()
-      .replace(/./g, (character) =>
-        String.fromCodePoint(127397 + character.charCodeAt(0))
+      .replace(/./g, (char) =>
+        String.fromCodePoint(127397 + char.charCodeAt(0))
       )
 
   const groupCountriesByFirstLetter = (
-    countryList: {
-      label: string
-      value: string
-      flag?: string
-    }[]
+    countries: { label: string; value: string; flag?: string }[]
   ) => {
-    const groupedCountries: Record<string, typeof countryList> = {}
+    const grouped: Record<string, typeof countries> = {}
 
-    for (const country of countryList) {
-      const firstLetter = country.label[0].toUpperCase()
-      if (!groupedCountries[firstLetter]) {
-        groupedCountries[firstLetter] = []
-      }
-      groupedCountries[firstLetter].push(country)
+    for (const country of countries) {
+      const letter = country.label[0].toUpperCase()
+      if (!grouped[letter]) grouped[letter] = []
+      grouped[letter].push(country)
     }
 
-    const sortedGroups = Object.keys(groupedCountries)
+    return Object.keys(grouped)
       .sort()
       .map((letter) => ({
         label: letter,
-        options: groupedCountries[letter].sort((countryA, countryB) =>
-          countryA.label.localeCompare(countryB.label)
-        ),
+        options: grouped[letter].sort((a, b) => a.label.localeCompare(b.label)),
       }))
-
-    return sortedGroups
   }
 
   const registrationFormFields: FormFieldConfig[] = [
@@ -100,14 +82,14 @@ const RegisterPage = () => {
   const handleRegistrationFormSubmit = async (
     formData: Record<string, any>
   ) => {
-    const registrationPayload = {
+    const payload = {
       ...formData,
       country: { countryName: formData.country },
       roleEnum: "USER",
     }
 
     try {
-      await AuthService.register(registrationPayload)
+      await AuthService.register(payload)
       navigateToLogin("/login")
     } catch (error) {
       console.error("Registration failed:", error)
@@ -115,14 +97,18 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="auth-page">
-      <h2>Register</h2>
-      <PrimaryForm
-        formFields={registrationFormFields}
-        onSubmit={handleRegistrationFormSubmit}
-        submitLabel="Register"
-      />
-    </div>
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-xl bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
+          Register
+        </h2>
+        <PrimaryForm
+          formFields={registrationFormFields}
+          onSubmit={handleRegistrationFormSubmit}
+          submitLabel="Register"
+        />
+      </div>
+    </main>
   )
 }
 

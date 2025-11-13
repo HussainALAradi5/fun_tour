@@ -24,14 +24,18 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="auth-page">
-      <h2>Login</h2>
-      <PrimaryForm
-        formFields={loginFields}
-        onSubmit={handleLogin}
-        submitLabel="Login"
-      />
-    </div>
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
+          Login
+        </h2>
+        <PrimaryForm
+          formFields={loginFields}
+          onSubmit={handleLogin}
+          submitLabel="Login"
+        />
+      </div>
+    </main>
   )
 }
 
