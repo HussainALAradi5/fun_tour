@@ -4,6 +4,7 @@ import AuthService from "../../utilities/Services/AuthServices"
 import CountryApiService from "../../utilities/Services/CountryService"
 import PrimaryForm from "../../Components/PrimaryForm"
 import type { FormFieldConfig } from "../../Components/PrimaryForm"
+import UserError from "./UserError"
 
 const RegisterPage = () => {
   const navigateToLogin = useNavigate()
@@ -13,6 +14,7 @@ const RegisterPage = () => {
       options: { label: string; value: string; flag?: string }[]
     }[]
   >([])
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchAndGroupCountries = async () => {
@@ -90,9 +92,14 @@ const RegisterPage = () => {
 
     try {
       await AuthService.register(payload)
+      setErrorMessage(null)
       navigateToLogin("/login")
-    } catch (error) {
-      console.error("Registration failed:", error)
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Registration failed."
+      setErrorMessage(message)
     }
   }
 
@@ -102,6 +109,14 @@ const RegisterPage = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
           Register
         </h2>
+
+        {errorMessage && (
+          <UserError
+            message={errorMessage}
+            onDismiss={() => setErrorMessage(null)}
+          />
+        )}
+
         <PrimaryForm
           formFields={registrationFormFields}
           onSubmit={handleRegistrationFormSubmit}

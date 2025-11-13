@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom"
+import { useState } from "react"
 import AuthService from "../../utilities/Services/AuthServices"
 import PrimaryForm from "../../Components/PrimaryForm"
 import type { FormFieldConfig } from "../../Components/PrimaryForm"
+import UserError from "./UserError"
 
 const LoginPage = () => {
   const navigate = useNavigate()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const loginFields: FormFieldConfig[] = [
     { name: "identifier", label: "Email or Username", type: "text" },
@@ -17,9 +20,14 @@ const LoginPage = () => {
     try {
       const user = await AuthService.login({ identifier, password })
       localStorage.setItem("user", JSON.stringify(user))
+      setErrorMessage(null)
       navigate("/profile")
-    } catch (err) {
-      console.error("Login error:", err)
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Login failed. Please try again."
+      setErrorMessage(message)
     }
   }
 
@@ -29,6 +37,14 @@ const LoginPage = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
           Login
         </h2>
+
+        {errorMessage && (
+          <UserError
+            message={errorMessage}
+            onDismiss={() => setErrorMessage(null)}
+          />
+        )}
+
         <PrimaryForm
           formFields={loginFields}
           onSubmit={handleLogin}
