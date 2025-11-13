@@ -1,8 +1,7 @@
 package com.server.server.Controllers;
 
-import com.server.server.Models.Tour;
-import com.server.server.Services.TourService;
-import jakarta.validation.Valid;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.server.server.Models.Tour;
+import com.server.server.Services.TourService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/tours")
@@ -33,6 +35,13 @@ public class TourController {
         return ResponseEntity.ok(tourService.addTour(tour));
     }
 
+    @GetMapping("/{id}")
+public ResponseEntity<Tour> getTourById(@PathVariable Long id) {
+    return tourService.getTourById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+}
+
     @PutMapping("/{id}")
     public ResponseEntity<Tour> updateTour(@PathVariable Long id, @Valid @RequestBody Tour tour) {
         return ResponseEntity.ok(tourService.updateTour(id, tour));
@@ -43,4 +52,6 @@ public class TourController {
         tourService.deleteTour(id);
         return ResponseEntity.ok("Tour deleted successfully.");
     }
+
+    
 }

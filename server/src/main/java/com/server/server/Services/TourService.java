@@ -1,11 +1,13 @@
 package com.server.server.Services;
 
-import com.server.server.Models.Tour;
-import com.server.server.Repositories.TourRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.server.server.Models.Tour;
+import com.server.server.Repositories.TourRepository;
 
 @Service
 public class TourService {
@@ -23,6 +25,10 @@ public class TourService {
     public List<Tour> getAllTours() {
         return tourRepository.findAll();
     }
+
+    public Optional<Tour> getTourById(Long id) {
+    return tourRepository.findById(id);
+}
 
     public Tour updateTour(Long id, Tour updated) {
         return tourRepository.findById(id).map(existing -> {

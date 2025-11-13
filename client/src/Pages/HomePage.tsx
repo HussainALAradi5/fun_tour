@@ -1,4 +1,17 @@
+import { useEffect, useState } from "react"
+import TourApiService from "../utilities/Services/TourService"
+import TourPlaceHolderCard from "../Components/Tour/TourPlaceHolderCard"
+import TourCard from "../Components/Tour/TourCard"
+
 const HomePage = () => {
+  const [tours, setTours] = useState<any[]>([])
+
+  useEffect(() => {
+    TourApiService.getAllTours()
+      .then(setTours)
+      .catch(() => setTours([]))
+  }, [])
+
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white">
       <div className="max-w-7xl mx-auto px-4 py-10">
@@ -7,12 +20,13 @@ const HomePage = () => {
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition">
-            <h2 className="text-xl font-semibold mb-2">Explore Destinations</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              Discover amazing places to visit and plan your next adventure.
-            </p>
-          </div>
+          {tours.length > 0
+            ? tours
+                .slice(0, 3)
+                .map((tour) => <TourCard key={tour.tourId} tour={tour} />)
+            : [1, 2, 3].map((i) => (
+                <TourPlaceHolderCard key={`placeholder-${i}`} />
+              ))}
         </div>
       </div>
     </main>
