@@ -6,6 +6,8 @@ import LoginPage from "./Pages/User/Loginpage"
 import RegisterPage from "./Pages/User/RegisterPage"
 import TourPage from "./Components/Tour/Tour"
 import TourDetails from "./Components/Tour/TourDetails"
+import TicketDetails from "./Components/Ticket/TicketDetails"
+import TicketPage from "./Pages/Ticket/TicketPage"
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/tours" element={<TourPage />} />
         <Route path="/tours/:id" element={<TourDetails />} />
+        <Route path="/tickets" element={<TicketPage />} />
+        <Route path="/tickets/:id" element={<TicketDetails />} />
       </Routes>
     </Router>
   )

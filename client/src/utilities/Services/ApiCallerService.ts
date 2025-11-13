@@ -42,6 +42,14 @@ const ApiCallerService = {
       throw error.response?.data || "Server error"
     }
   },
+  delete: async (endpoint: string) => {
+    try {
+      const response = await api.delete(endpoint)
+      return response.data
+    } catch (error: any) {
+      throw error.response?.data || "Server error"
+    }
+  },
 }
 
 export default ApiCallerService
