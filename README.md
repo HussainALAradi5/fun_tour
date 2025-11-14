@@ -24,6 +24,7 @@
 - React Native
 - TypeScript
 - CSS(Styling)
+- TailWInd
 - Postgresql
 
 ---
